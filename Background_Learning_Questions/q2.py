@@ -14,9 +14,7 @@ def computeW(n, m, dt, dx):
     W = jnp.cumsum(W, axis=1)
 
     # part 2a
-    #a = jax.random.uniform(key, minval=10, maxval=100)*(-1)
-    #b = jax.random.uniform(key, minval=10, maxval=100)
-    a = -5
+    a = -27
     b = 5
     
     rows, cols = jnp.where(jnp.logical_or(W > b,W < a))
@@ -24,23 +22,28 @@ def computeW(n, m, dt, dx):
     values, indices = jnp.unique(rows, return_index=True)
    
     result = jnp.take(cols, indices)
-
+    
+    R = W[jnp.arange(len(W)), result]
+    aCount = len(R[R < 0])
+    bCount = len(R) - aCount
+    print("prob of a out: " + str(aCount/len(R)))
+    print("prob of b out: " + str(bCount/len(R)))
+    
     result = jnp.mean(result)
 
     return result
 
 dt = 1
 dx = 1
-totalSteps = 100
-totalRuns = 10
+totalSteps = 10000
+totalRuns = 1000
 
 result = computeW(totalSteps, totalRuns, dt, dx)
-print(result)
+print("approximation of expected value: " + str(result))
 
 #plt.plot(jnp.arange(0,len(W)*dt, step=dt), W)
 #plt.xlabel("time")
 #plt.ylabel("W(t)")
 #plt.show()
-
 
 
