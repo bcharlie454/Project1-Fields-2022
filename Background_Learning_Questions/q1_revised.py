@@ -4,8 +4,9 @@ import time
 
 # model parameters
 s = 20
-m = 1000000
+m = 10000000
 x = 1
+
 
 key = jnp.random.PRNGKey(int(time.time()))
 
@@ -18,7 +19,7 @@ diceRolls = jnp.numpy.where(diceRolls > 1, 0, diceRolls)
 
 rollCount = jnp.numpy.count_nonzero(diceRolls, axis=1) + 1
 
-approx = jnp.numpy.average(rollCount)
+approx = jnp.numpy.mean(rollCount)
 
 print(approx)
 
