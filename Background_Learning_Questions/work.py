@@ -4,7 +4,7 @@ import time
 
 # model parameters
 s = 20
-m = 100000
+m = 10
 x = 1
 
 key = jnp.random.PRNGKey(int(time.time()))
