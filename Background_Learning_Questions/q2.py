@@ -14,14 +14,14 @@ def computeW(n, m, dt, dx):
     W = jnp.cumsum(W, axis=1)
 
     # part 2a
-    a = -20
-    b = 15
+    a = -50
+    b = 50
     
-    rows, cols = jnp.where(jnp.logical_or(W > b,W < a))
+    rows, cols = jnp.where(jnp.logical_or(W >= b,W <= a))
 
     values, indices = jnp.unique(rows, return_index=True)
    
-    result = jnp.take(cols, indices) - 30 
+    result = jnp.take(cols, indices)
     R = W[jnp.arange(len(W)), result]
     aCount = len(R[R < 0])
     bCount = len(R) - aCount
@@ -35,7 +35,7 @@ def computeW(n, m, dt, dx):
 
 dt = 1
 dx = 1
-totalSteps = 10000
+totalSteps = 100000
 totalRuns = 1000
 
 result = computeW(totalSteps, totalRuns, dt, dx)
