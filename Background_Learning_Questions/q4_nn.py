@@ -19,7 +19,6 @@ def generateData(size, fileName):
 
     df.to_pickle('./pickle_files/' + fileName + '.pkl')
 
-#generateData(10000, 'q4_dataSet')
 
 def ReLU(x):
     return np.maximum(0,x)
@@ -43,14 +42,34 @@ def initializeParam(layers):
         
         param.append((weights,bias))
 
-    print(param)
+    return param
 
-    
+def forwardPass(param, x):
+    '''go through the network once'''
+    values = x
+    # go through each layer
+    for weights, bias in param:
+        values = np.dot(weights, values)
+        values = values + bias
+        values = np.apply_along_axis(ReLU, 0, values)
 
 
-# to read in the dataset -> df = df.read_pickle('./pickle_files/' + fileName + '.pkl')
+fileName = 'q4_dataSet'
+
+# make data
+#generateData(10000, fileName)
+
+# get data
+df = pd.read_pickle('./pickle_files/' + fileName + '.pkl')
+
+# create ANN
 layers = np.array([3, 5, 1])
-initializeParam(layers)
+param = initializeParam(layers)
+
+# start solving
+xTrain = df['x'].tolist()
+yTrain = df['y'].tolist()
+forwardPass(param, np.array(xTrain[0]))
 
 
 
