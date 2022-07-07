@@ -1,3 +1,6 @@
+# ignore notebook files since they are changed when downloaded to the local machine
+*.ipynb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
