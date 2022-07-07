@@ -14,21 +14,21 @@ def computeW(n, m, dt, dx):
     W = jnp.cumsum(W, axis=1)
 
     # part 2a
-    a = -27
-    b = 5
+    a = -20
+    b = 15
     
     rows, cols = jnp.where(jnp.logical_or(W > b,W < a))
 
     values, indices = jnp.unique(rows, return_index=True)
    
-    result = jnp.take(cols, indices)
-    
+    result = jnp.take(cols, indices) - 30 
     R = W[jnp.arange(len(W)), result]
     aCount = len(R[R < 0])
     bCount = len(R) - aCount
     print("prob of a out: " + str(aCount/len(R)))
     print("prob of b out: " + str(bCount/len(R)))
     
+    result = result
     result = jnp.mean(result)
 
     return result
