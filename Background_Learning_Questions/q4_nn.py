@@ -3,10 +3,12 @@ import jax.random as random
 import jax.numpy as np
 import pandas as pd
 import time
+import matplotlib.pyplot as plt
 
 def f(x):
     '''Function we want to train our ANN for'''
     return np.exp(-10*np.abs(x))
+    #return x
 
 def generateData(size, fileName):
     '''Generate new training data using the function f'''
@@ -59,7 +61,10 @@ def forwardPass(W, b, x):
     for i in range(len(W)):
         #values = sigmoid(np.dot(W[i], values) + b[i])
         values = np.dot(W[i], values) + b[i]
-        values = np.apply_along_axis(ReLU, 0, values)
+        if (i != len(W)-1):
+            #values = np.apply_along_axis(sigmoid, 0, values)
+            #values = np.apply_along_axis(ReLU, 1, values)
+            values = ReLU(values)
     
     # give back the predicted value
     return values[0][0]
@@ -84,32 +89,46 @@ def backwardPass(W_grads, b_grads, W, b, lr):
 fileName = 'q4_dataSet'
 
 # get data
-#generateData(1000, fileName)
+generateData(10000, fileName)
 df = pd.read_pickle('./pickle_files/' + fileName + '.pkl')
 xTrain = df['x'].tolist()
 yTrain = df['y'].tolist()
 
 # create ANN
-layers = np.array([5,10,1])
+layers = np.array([10,5,1])
 W, b = initializeParam(layers)
 
 # train the ANN
-learningRate = 0.1
+learningRate = 0.01
 for i in range(len(xTrain)):
     # forward propagate
     W_grads, b_grads = jax.grad(predict, (0,1))(W, b, np.array(xTrain[i]), np.array(yTrain[i]))
     
     # backward propagate
-
     backwardPass(W_grads, b_grads, W, b, learningRate)
     
-    if (i % 50 == 0):
+
+    if (i % 100 == 0):
         print('loss: ', predict(W, b, np.array(xTrain[i]), np.array(yTrain[i])))
-    
+        print('guess: ' + str(forwardPass(W, b, np.array(0))))
+
+    if (i==9900):
+        break
+ 
+yPred = []
+xPred = []
+for i in range(len(xTrain)):
+    if (i>9900 and i < 10000):
+        yPred.append(forwardPass(W, b, xTrain[i]))
+        xPred.append(xTrain[i])
+
+print(len(yPred))
+print('guess: ' + str(forwardPass(W, b, np.array(0))))
     
 # test the ANN
-#print('guess: ' + str(forwardPass(W, b, np.array(0.1))))
-
+plt.scatter(xTrain, yTrain)
+plt.scatter(xPred, yPred)
+plt.show()
 
 
 
